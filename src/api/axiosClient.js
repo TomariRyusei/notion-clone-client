@@ -10,9 +10,9 @@ const axiosClient = axios.create({
 });
 
 // APIリクエスト前処理
-axios.interceptors.request.use(async (config) => {
+axiosClient.interceptors.request.use(async (config) => {
   return {
-    config,
+    ...config,
     // リクエスト前にJWTトークンを認証情報として付与
     headers: {
       "Content-Type": "application/json",
@@ -22,7 +22,7 @@ axios.interceptors.request.use(async (config) => {
 });
 
 // APIレスポンス受領時処理
-axios.interceptors.response.use(
+axiosClient.interceptors.response.use(
   (response) => {
     if (response && response.data) return response.data;
     return response;
