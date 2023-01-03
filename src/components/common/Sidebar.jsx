@@ -88,6 +88,15 @@ const Sidebar = () => {
             </IconButton>
           </Box>
         </ListItemButton>
+        <ListItemButton sx={{ pl: "20px" }} component={Link} to="/memo/454638">
+          <Typography>📝 仮置きのメモ</Typography>
+        </ListItemButton>
+        <ListItemButton sx={{ pl: "20px" }} component={Link} to="/memo/454638">
+          <Typography>📝 仮置きのメモ</Typography>
+        </ListItemButton>
+        <ListItemButton sx={{ pl: "20px" }} component={Link} to="/memo/454638">
+          <Typography>📝 仮置きのメモ</Typography>
+        </ListItemButton>
       </List>
     </Drawer>
   );
