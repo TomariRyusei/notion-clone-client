@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+import memoApi from "../api/memoApi";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -10,7 +13,14 @@ const Home = () => {
   const createMemo = async () => {
     setLoading(true);
     try {
-    } catch (err) {}
+      const res = await memoApi.create();
+      console.log(res);
+      navigate(`/memo/${res._id}`);
+    } catch (err) {
+      alert(err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

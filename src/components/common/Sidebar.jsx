@@ -13,15 +13,52 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import assets from "../../assets/index";
+import memoApi from "../../api/memoApi";
+import { setMemo } from "../../redux/features/memoSlice";
 
 const Sidebar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { memoId } = useParams();
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const user = useSelector((state) => state.user.value);
+  const memos = useSelector((state) => state.memo.value);
+
+  useEffect(() => {
+    const getMemos = async () => {
+      try {
+        const res = await memoApi.getAll();
+        dispatch(setMemo(res));
+      } catch (error) {
+        alert(error);
+      }
+    };
+
+    getMemos();
+  }, [dispatch]);
+
+  // ハイライト対象のメモID(クリックされているメモ)を格納
+  useEffect(() => {
+    const activeItem = memos.findIndex((e) => e._id === memoId);
+    setActiveIndex(activeItem);
+  }, [memos, memoId]);
 
   const logout = () => {
     localStorage.removeItem("token");
     navigate("/login");
+  };
+
+  const addMemo = async () => {
+    try {
+      console.log("addmemo");
+      const res = await memoApi.create();
+      const newList = [res, ...memos];
+      dispatch(setMemo(newList));
+      navigate(`/memo/${res._id}`);
+    } catch (err) {
+      alert(err);
+    }
   };
 
   return (
@@ -83,20 +120,24 @@ const Sidebar = () => {
             <Typography variant="body2" fontWeight="700">
               プライベート
             </Typography>
-            <IconButton>
+            <IconButton onClick={() => addMemo()}>
               <AddBoxOutlinedIcon fontSize="small" />
             </IconButton>
           </Box>
         </ListItemButton>
-        <ListItemButton sx={{ pl: "20px" }} component={Link} to="/memo/454638">
-          <Typography>📝 仮置きのメモ</Typography>
-        </ListItemButton>
-        <ListItemButton sx={{ pl: "20px" }} component={Link} to="/memo/454638">
-          <Typography>📝 仮置きのメモ</Typography>
-        </ListItemButton>
-        <ListItemButton sx={{ pl: "20px" }} component={Link} to="/memo/454638">
-          <Typography>📝 仮置きのメモ</Typography>
-        </ListItemButton>
+        {memos.map((memo, index) => (
+          <ListItemButton
+            sx={{ pl: "20px" }}
+            component={Link}
+            to={`/memo/${memo._id}`}
+            key={memo._id}
+            selected={index === activeIndex} //　選択されているメモをハイライト
+          >
+            <Typography>
+              {memo.icon} {memo.title}
+            </Typography>
+          </ListItemButton>
+        ))}
       </List>
     </Drawer>
   );

@@ -8,6 +8,7 @@ import AuthLayout from "./components/layout/AuthLayout";
 import Register from "./pages/Register";
 import AppLayout from "./components/layout/AppLayout";
 import Home from "./pages/Home";
+import Memo from "./pages/Memo";
 
 function App() {
   const theme = createTheme({
@@ -25,7 +26,7 @@ function App() {
           <Route path="/" element={<AppLayout />}>
             <Route index element={<Home />} />
             <Route path="memo" element={<Home />} />
-            {/* <Route path="memo/:memoId" element={<Memo />} /> */}
+            <Route path="memo/:memoId" element={<Memo />} />
           </Route>
         </Routes>
       </BrowserRouter>
